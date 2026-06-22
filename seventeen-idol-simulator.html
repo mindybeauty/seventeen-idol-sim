@@ -1117,6 +1117,82 @@
   .hidden { display: none !important; }
   .text-center { text-align: center; }
 
+  /* 章節過渡 */
+  .chapter-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: #0c0a16;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 480px;
+    margin: 0 auto;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .chapter-transition.in { opacity: 1; }
+  .chapter-transition .ct-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.55) saturate(1.1);
+    transform: scale(1.05);
+    transition: transform 5s ease-out;
+  }
+  .chapter-transition.in .ct-bg { transform: scale(1); }
+  .chapter-transition .ct-overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 35%, transparent 65%, rgba(0,0,0,0.5) 100%);
+  }
+  .chapter-transition .ct-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    padding: 24px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+  }
+  .chapter-transition.in .ct-content { opacity: 1; transform: translateY(0); }
+  .chapter-transition .ct-num {
+    font-size: 11px;
+    letter-spacing: 0.6em;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 18px;
+    font-weight: 500;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  }
+  .chapter-transition .ct-title {
+    font-size: 30px;
+    margin: 0;
+    letter-spacing: 0.1em;
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.8), 0 0 40px rgba(255,180,150,0.3);
+    line-height: 1.4;
+  }
+  .chapter-transition .ct-divider {
+    width: 40px; height: 1px;
+    background: rgba(255,255,255,0.5);
+    margin: 26px auto 22px;
+  }
+  .chapter-transition .ct-hint {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.3em;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+  }
+
   /* 浮動心跳 emoji */
   .float-emojis {
     position: fixed;
@@ -1299,6 +1375,47 @@ function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 function rand(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function memberImg(idx) { return `assets/member-bg/member-${String(idx+1).padStart(2,'0')}.png`; }
+function chapterImage(chapter) {
+  if (!chapter) return null;
+  const c = chapter[0];
+  if (c === '起') return 'assets/chapters/chapter01.png';
+  if (c === '承') return 'assets/chapters/chapter02.png';
+  if (c === '轉') return 'assets/chapters/chapter03.png';
+  if (c === '合') return 'assets/chapters/chapter04.png';
+  return null;
+}
+function chapterNumber(chapter) {
+  if (!chapter) return '';
+  const map = { '起': 'I', '承': 'II', '轉': 'III', '合': 'IV' };
+  return map[chapter[0]] || '';
+}
+function showChapterTransition(chapter, onDone) {
+  const img = chapterImage(chapter);
+  if (!img) { onDone(); return; }
+  const overlay = document.createElement('div');
+  overlay.className = 'chapter-transition';
+  overlay.innerHTML = `
+    <div class="ct-bg" style="background-image: url('${img}')"></div>
+    <div class="ct-overlay-gradient"></div>
+    <div class="ct-content">
+      <div class="ct-num">CHAPTER ${chapterNumber(chapter)}</div>
+      <h2 class="ct-title">${chapter}</h2>
+      <div class="ct-divider"></div>
+      <div class="ct-hint">點擊任一處繼續</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('in'));
+  let dismissed = false;
+  const dismiss = () => {
+    if (dismissed) return;
+    dismissed = true;
+    overlay.classList.remove('in');
+    setTimeout(() => { overlay.remove(); onDone(); }, 600);
+  };
+  overlay.addEventListener('click', dismiss);
+  setTimeout(dismiss, 4500);
+}
 
 function updateStats(delta) {
   Object.keys(delta).forEach(k => {
@@ -1585,6 +1702,7 @@ function renderCharCard() {
 // ============ Stage C：劇情主介面 ============
 function renderStory() {
   state.stage = 'story';
+  state.chapter = '';
   setTheme('morning');
   app().innerHTML = `
     <div class="story-screen">
@@ -2002,9 +2120,19 @@ let currentTyping = null;
 function loadScene(scene) {
   if (scene.isEnding) return renderEnding(scene);
 
+  const chapterChanged = state.chapter !== scene.chapter;
   state.week = scene.week;
   state.chapter = scene.chapter;
   state.scene = scene.scene;
+
+  if (chapterChanged && chapterImage(scene.chapter)) {
+    showChapterTransition(scene.chapter, () => _renderSceneBody(scene));
+    return;
+  }
+  _renderSceneBody(scene);
+}
+
+function _renderSceneBody(scene) {
   renderHUD();
 
   // 主題依場景調色
@@ -2535,7 +2663,7 @@ function endingImage(scene) {
   if (t === 'BE') return scene.title.includes('離開')
     ? 'assets/endings/ending-BE-leave.png'
     : 'assets/endings/ending-BE-expose.png';
-  if (t === 'GE') return null;
+  if (t === 'GE') return 'assets/endings/ending-GE.png';
   return null;
 }
 function renderEnding(scene) {

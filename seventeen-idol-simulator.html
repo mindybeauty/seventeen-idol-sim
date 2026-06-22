@@ -40,9 +40,37 @@
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior-y: contain;
   }
-  body.theme-night { background: linear-gradient(160deg, #1c1a2c 0%, #0e0c1c 60%, #1a1530 100%); color: #f0e9dd; }
-  body.theme-sunset { background: linear-gradient(160deg, #ffd4b0 0%, #f5b7a3 50%, #b06d52 100%); }
+  body.theme-night {
+    background: linear-gradient(160deg, #1c1a2c 0%, #0e0c1c 60%, #1a1530 100%);
+    --ink: #f7eddc;
+    --ink-soft: #e2d6bf;
+    --muted: #a89b86;
+    --line: rgba(255, 240, 220, 0.18);
+    --glass: rgba(40, 35, 55, 0.45);
+    --glass-deep: rgba(40, 35, 55, 0.7);
+    --primary-deep: #f5b7a3;
+  }
+  body.theme-sunset {
+    background: linear-gradient(160deg, #ffd4b0 0%, #f5b7a3 50%, #b06d52 100%);
+    --ink: #2b1810;
+    --ink-soft: #4a2818;
+    --muted: #6b3d28;
+  }
   body.theme-morning { background: linear-gradient(160deg, #fff5e6 0%, #ffe0c2 100%); }
+  body.theme-night .story-text { color: #f7eddc; }
+  body.theme-night .story-text .os-text {
+    color: #ffb8d2;
+    background: linear-gradient(120deg, rgba(255,184,210,0.15), rgba(255,220,200,0.12));
+  }
+  body.theme-night .hud-stat { background: rgba(255,255,255,0.08); border-color: rgba(255,240,220,0.15); }
+  body.theme-night .chapter-divider::before,
+  body.theme-night .chapter-divider::after { background: rgba(255,240,220,0.25); }
+  body.theme-night .typing-cursor { background: #f5b7a3; }
+  body.theme-night .choice { background: rgba(40,35,55,0.65); border-color: rgba(255,240,220,0.2); color: #f7eddc; }
+  body.theme-night .choice .delta { color: #c8b9a0; }
+  body.theme-night .custom-input-group { background: rgba(40,35,55,0.6); border-color: rgba(255,240,220,0.2); }
+  body.theme-night .custom-input-group input { color: #f7eddc; }
+  body.theme-night .custom-input-group input::placeholder { color: #a89b86; }
 
   #app {
     max-width: 480px;
@@ -141,30 +169,28 @@
     font-size: 38px;
     font-weight: 800;
     margin: 0;
-    background: linear-gradient(135deg, #fff 0%, #ffd9b8 50%, #b06d52 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: #fff;
     letter-spacing: 0.05em;
-    text-shadow: 0 4px 30px rgba(255,200,150,0.6);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6), 0 0 30px rgba(255,180,120,0.5);
     line-height: 1.15;
   }
   .cover-title .sub {
     margin-top: 10px;
     font-size: 13px;
-    color: rgba(80,50,30,0.85);
+    color: rgba(255,255,255,0.92);
     letter-spacing: 0.4em;
     font-weight: 500;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
   }
   .cover-title .badge {
     display: inline-block;
     margin-top: 14px;
     padding: 5px 14px;
-    background: rgba(255,255,255,0.4);
-    border: 1px solid rgba(255,255,255,0.6);
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.5);
     border-radius: 999px;
     font-size: 11px;
-    color: var(--primary-deep);
+    color: #fff;
     backdrop-filter: blur(10px);
     letter-spacing: 0.2em;
   }
@@ -201,9 +227,10 @@
     left: 0; right: 0;
     text-align: center;
     font-size: 10px;
-    color: rgba(80,50,30,0.6);
+    color: rgba(255,255,255,0.75);
     letter-spacing: 0.1em;
     z-index: 3;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
   }
 
   /* ========== Stage B：角色創建 ========== */
@@ -1237,7 +1264,6 @@ const state = {
   player: {
     name: '',
     age: '',
-    nickname: '', // 玩家給 Nuvva 取的名字
   },
   setup: {
     identity: null,
@@ -1364,6 +1390,7 @@ function renderCover() {
 // ============ Stage B：角色創建 ============
 function renderCreation() {
   state.stage = 'creation';
+  setTheme(null);
   app().innerHTML = `
     <div class="creation">
       <div class="creation-header">
@@ -1380,10 +1407,6 @@ function renderCreation() {
         <div class="field-row">
           <label>年齡</label>
           <input id="page" type="number" min="18" max="40" placeholder="≥ 18" value="${state.player.age}" />
-        </div>
-        <div class="field-row">
-          <label>DM 暱稱</label>
-          <input id="pnick" placeholder="給 DM (Nuvva) 取個名字" value="${state.player.nickname}" />
         </div>
       </div>
 
@@ -1486,8 +1509,7 @@ function checkCreationReady() {
 function confirmCreation() {
   const name = ($('#pname')?.value || '').trim() || '未命名玩家';
   const age = parseInt($('#page')?.value) || 22;
-  const nick = ($('#pnick')?.value || '').trim();
-  state.player = { name, age: String(age), nickname: nick };
+  state.player = { name, age: String(age) };
 
   // 依身份初始化金錢
   const id = IDENTITIES.find(i => i.key === state.setup.identity);
@@ -1859,10 +1881,9 @@ function typeText(target, raw, onDone) {
     }
     const t = tokens[idx];
     if (t.os) {
-      const osPrefix = state.player.nickname ? `${state.player.nickname} OS：` : 'Nuvva OS：';
       const span = document.createElement('span');
       span.className = 'os-text';
-      span.textContent = `（${osPrefix}${t.text}）`;
+      span.textContent = `（OS：${t.text}）`;
       target.appendChild(span);
     } else {
       target.appendChild(document.createTextNode(t.text));

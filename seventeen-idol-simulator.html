@@ -1756,9 +1756,111 @@ const SCENES = {
 
 外面雨還在下。你知道你必須做選擇。`,
     choices: [
-      { key: 'A', text: '回他「我累了，明天再說」，今晚不見面。', delta: { secrecy: +5, favor: -2, mood: -4 }, deltaText: '保密度 +5 · 好感度 -2 · 心情 -4', next: 'ending_OE' },
-      { key: 'B', text: '回「我下樓等你」，然後關燈出門。', delta: { favor: +6, secrecy: -8, companyAlert: +6, mood: +2 }, deltaText: '好感度 +6 · 保密 -8 · 警覺 +6', next: 'ending_HE' },
-      { key: 'C', text: '截圖那篇貼文發給他：「先看這個，再決定要不要見面。」', delta: { favor: +3, secrecy: +2, youthSync: +5, workStress: -3 }, deltaText: '好感 +3 · 保密 +2 · 共鳴 +5', next: 'ending_SE' },
+      { key: 'A', text: '回他「我累了，明天再說」，今晚不見面。', delta: { secrecy: +5, favor: -2, mood: -4 }, deltaText: '保密度 +5 · 好感度 -2 · 心情 -4', next: 'sceneE_A' },
+      { key: 'B', text: '回「我下樓等你」，然後關燈出門。', delta: { favor: +6, secrecy: -8, companyAlert: +6, mood: +2 }, deltaText: '好感度 +6 · 保密 -8 · 警覺 +6', next: 'sceneE_B' },
+      { key: 'C', text: '截圖那篇貼文發給他：「先看這個，再決定要不要見面。」', delta: { favor: +3, secrecy: +2, youthSync: +5, workStress: -3 }, deltaText: '好感 +3 · 保密 +2 · 共鳴 +5', next: 'sceneE_C' },
+    ],
+  },
+  sceneE_A: {
+    week: 9,
+    chapter: '轉：被看見的危險',
+    scene: '出租屋 · 飄雪的凌晨',
+    rel: null,
+    text: `一週過去了。
+
+他沒有再傳第二則訊息。
+
+你也沒有。
+
+你關掉聊天視窗，又打開，又關掉。手指停在他的對話框前面，最上面一條還是那句「我想跟妳說一件事」，下面是你的「我累了，明天再說」。
+
+時間停在那裡，像被釘住的一張照片。
+
+你發現自己這一週做了很多事：把堆積三個月的稿子寫完了一半、把以前一直拖著沒交的兩份報告補完、甚至把房間徹底打掃過一次。<<OS:諷刺的是，被一個人離得遠一點，你反而過得更像你自己>>
+
+凌晨兩點，窗外飄起這個冬天的第一場雪。你站在窗邊，看著雪落在對面屋頂上，第一次覺得這座城市很安靜。
+
+但你也知道，這個安靜是有代價的。
+
+你打開抽屜，看見那張他第一次替你扶住的通行證。紙箱已經丟了，這張紙還在。
+
+你必須決定，怎麼把這一段收尾。`,
+    choices: [
+      { key: 'A', text: '把整個聊天框刪除，把這個人從生活裡刪掉。', delta: { mood: -25, secrecy: +10, lifeStability: +8, favor: -10 }, deltaText: '心情 -25 · 保密 +10 · 穩定 +8 · 好感 -10', next: 'ending_BE_leave' },
+      { key: 'B', text: '不刪聊天記錄，但今晚之後，不再主動。', delta: { mood: -8, secrecy: +5, youthSync: +5 }, deltaText: '心情 -8 · 保密 +5 · 共鳴 +5', next: 'ending_OE' },
+      { key: 'C', text: '突然意識到，這一週你完成了一年沒完成的事。', delta: { mood: +8, youthSync: +30, lifeStability: +10 }, deltaText: '心情 +8 · 共鳴 +30 · 穩定 +10', next: 'ending_GE' },
+    ],
+  },
+  sceneE_B: {
+    week: 16,
+    chapter: '合:各自成長後的選擇',
+    scene: '他的公寓陽台 · 入冬的深夜',
+    rel: null,
+    text: `兩個月後。
+
+巡演結束的這個晚上，他回到首爾，深夜傳訊息：「上來坐一下？」
+
+你按下他公寓的門鈴時，手指還是有點抖。<<OS:再多次也沒辦法習慣，每一次都像第一次>>
+
+他開門的時候穿著洗到發白的白 T，頭髮還沒乾。屋裡只開了客廳一盞落地燈，整個空間像被泡過茶的暖色濾鏡。
+
+你們沒有立刻說話。
+
+他遞給你一罐冰過的氣泡水，自己拿了一罐啤酒，兩個人走到陽台。冬天的風吹進來，他下意識把外套披到你肩上。
+
+「最近還好嗎。」他問。
+
+你想了一下，誠實回答：「累，但很真實。」
+
+他笑了一下，眼底的疲憊還在，但比上次見面時淡了一些。
+
+「我也是。」
+
+陽台的欄杆冰冰的。樓下的車燈像一條會流動的河。他的肩膀靠在你旁邊，沒有碰到，但隔一張紙的距離。
+
+「我們已經這樣兩個月了。」他說，「妳有沒有想過，要不要不一樣一點？」<<OS:這句話他想了很久才開口，你聽得出來>>
+
+你知道他在問什麼。
+
+也知道任何一個答案，都會把你們推向不同的路。`,
+    choices: [
+      { key: 'A', text: '「就這樣很好。我不想用你舞台之外的生命去換什麼。」', delta: { favor: +6, secrecy: +15, companyAlert: -8, mood: +6 }, deltaText: '好感 +6 · 保密 +15 · 警覺 -8 · 心情 +6', next: 'ending_HE' },
+      { key: 'B', text: '「我們公開吧。我可以承受。」', delta: { favor: +3, secrecy: -40, companyAlert: +35, popularity: +60 }, deltaText: '好感 +3 · 保密 -40 · 警覺 +35 · 人氣 +60', next: 'ending_BE_expose' },
+      { key: 'C', text: '「我不催你公開，但我也不想再委屈自己藏起來。」', delta: { favor: +5, youthSync: +35, mood: +8, lifeStability: +6 }, deltaText: '好感 +5 · 共鳴 +35 · 心情 +8 · 穩定 +6', next: 'ending_GE' },
+    ],
+  },
+  sceneE_C: {
+    week: 24,
+    chapter: '合:各自成長後的選擇',
+    scene: '新專輯發布會場後台',
+    rel: null,
+    text: `三個月後。
+
+發布會場的後台，所有人都在快步走。造型師、工作人員、攝影助理擦肩而過，沒有人注意到角落裡正在進行的一場非常安靜的對話。
+
+他穿著新專輯主打的舞台服，黑色西裝、銀色耳釘。手裡拿著待會要拿的麥克風。
+
+「妳真的確定？」他低聲問。
+
+「公司寫的稿子裡，會有那句話。」
+
+你深吸了一口氣。從你那天把貼文截圖丟給他開始，事情就一直在往這個方向走。公司、團隊、粉圈，所有人都在準備一個版本的「公開」——不公開姓名，但承認存在。<<OS:這已經是顆爆彈，再小一點公司也不會同意>>
+
+你看見他喉結動了一下，像是把所有不安都吞下去了。
+
+距離他上台還有十二分鐘。
+
+你必須選擇待會要不要走上記者會的側台、要不要承擔接下來所有的目光、要不要把這個本來只屬於你們兩個人的秘密，正式變成所有人都能討論的事。
+
+工作人員在揮手催他。
+
+他看著你，眼神比平常都安靜。
+
+「妳說了算。」`,
+    choices: [
+      { key: 'A', text: '走到側台。讓他知道你在這裡。', delta: { favor: +10, popularity: +50, secrecy: -50, youthSync: +20 }, deltaText: '好感 +10 · 人氣 +50 · 保密 -50 · 共鳴 +20', next: 'ending_SE' },
+      { key: 'B', text: '在最後一刻請他改口。「不要說那句話。」', delta: { favor: +4, secrecy: +30, companyAlert: -10, lifeStability: +8 }, deltaText: '好感 +4 · 保密 +30 · 警覺 -10 · 穩定 +8', next: 'ending_HE' },
+      { key: 'C', text: '告訴他:「不管你今天說什麼，我都要去做自己的事了。」', delta: { mood: +10, youthSync: +40, lifeStability: +15, favor: -2 }, deltaText: '心情 +10 · 共鳴 +40 · 穩定 +15 · 好感 -2', next: 'ending_GE' },
     ],
   },
   ending_HE: {
@@ -1795,6 +1897,83 @@ const SCENES = {
 
 但那一刻的便利商店，那兩盒便當，那杯沒喝完的水——
 都只剩你一個人記得。`,
+  },
+  ending_BE_expose: {
+    isEnding: true,
+    tag: 'BE',
+    title: '曝光後的分離',
+    body: `他陽台的對話，最後沒有變成「我們公開吧」。
+
+它變成了三天後韓網匿名論壇上那張高清的照片——你站在他公寓樓下、外套披在你肩上、他從欄杆探出半個身子。
+
+公司在 24 小時內發了聲明：「相關報導與事實有所出入，將保留法律追訴權。」
+
+他在訪談裡沉默了十秒鐘。
+
+CARAT 的話題從心疼變成審判，從審判變成風暴。
+你的舊照片被翻出來，連你五年前刪掉的 IG 帳號都被人挖出來截圖。
+
+最後一條訊息，是他傳的：
+「對不起。我以為我可以保護妳的。」
+
+你沒有回。
+你知道他不是不想，是真的不能。
+
+風暴最後會過去。但你們的關係，沒有等到那一天。`,
+  },
+  ending_BE_leave: {
+    isEnding: true,
+    tag: 'BE',
+    title: '你選擇離開',
+    body: `刪除整個聊天框，那一個按鈕，按下去的時候你以為會痛很久。
+
+但其實只是很安靜。
+
+凌晨的雪一直下，你把那張通行證也一起扔進了垃圾袋。
+然後你做了一件你拖了很久沒做的事：寫信給導師，正式申請休學一學期。
+你買了一張回家的機票。
+
+兩週後，你坐在自己家的窗邊，曬著從來沒注意過的冬日陽光。
+朋友傳訊息問你：「妳最近還好嗎？」
+你想了一下，回她：「我終於把自己的生活拿回來了。」
+
+新聞、舞台、論壇上他的名字偶爾還會閃過你的螢幕。
+你會看一眼，然後關掉。
+
+不是不愛了。
+只是你終於明白，這段感情如果還要繼續，會把你完全拖垮。
+
+你選擇先愛自己。
+
+這個故事不是 happy ending，但它是你給自己的禮物。`,
+  },
+  ending_GE: {
+    isEnding: true,
+    tag: 'GE',
+    title: '各自發光',
+    body: `這一年的最後一天，你站在自己第一個個人作品的發表會上。
+
+不是站姐拍的偷拍，不是粉圈論壇的截圖，是真的屬於你的一場展演。
+
+你看著台下，朋友、家人、合作過的同事都在。
+他不在。
+
+但你知道，他在另外一個城市的舞台上，正在唱新專輯主打的那首歌。
+那首歌的第三段歌詞，是他半年前在錄音室外哼給你聽過的那段旋律。
+
+當時你沒有問。現在你也不會問。
+
+你們沒有公開，也沒有徹底斷聯。
+你們只是各自走進了自己更想去的地方。
+
+凌晨，他傳了一則訊息：
+「看到妳今天的照片了。妳好像比我認識妳的時候，更像妳了。」
+
+你笑了一下，回他：
+「你也是。」
+
+故事不是只有「在一起」一種收尾。
+你們最好的版本，是各自發著光，剛好朝同一個方向。`,
   },
   ending_SE: {
     isEnding: true,
@@ -2356,7 +2535,8 @@ function endingImage(scene) {
   if (t === 'BE') return scene.title.includes('離開')
     ? 'assets/endings/ending-BE-leave.png'
     : 'assets/endings/ending-BE-expose.png';
-  return 'assets/endings/ending-HE.png';
+  if (t === 'GE') return null;
+  return null;
 }
 function renderEnding(scene) {
   state.stage = 'ending';
@@ -2366,7 +2546,9 @@ function renderEnding(scene) {
     <div class="ending">
       <div class="ending-tag">${scene.tag} · ENDING</div>
       <h1>${scene.title}</h1>
-      <div class="ending-hero" style="background-image: url('${endingImage(scene)}')"></div>
+      ${endingImage(scene)
+        ? `<div class="ending-hero" style="background-image: url('${endingImage(scene)}')"></div>`
+        : `<div class="ending-hero" style="background: linear-gradient(135deg, ${m.c1} 0%, ${m.c2} 60%, #f5b7a3 100%); display: flex; align-items: center; justify-content: center; font-size: 72px;">✨</div>`}
       <div class="char-portrait" style="--cp-img: url('${memberImg(state.setup.member)}'); --cp-bg: ${m.c2}; width: 96px; height: 96px; margin: 8px auto;"></div>
       <p style="font-weight: 600; color: var(--ink); margin-top: 8px;">${m.ko} (${m.en})</p>
       <p>${scene.body.replace(/\n/g, '<br>')}</p>

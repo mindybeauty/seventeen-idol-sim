@@ -29,16 +29,18 @@
     --pyq-blue: #576b95;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body {
+  html {
+    margin: 0; padding: 0;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
     margin: 0; padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Helvetica Neue", sans-serif;
     background: var(--bg-warm);
     color: var(--ink);
     min-height: 100vh;
-    overflow-x: hidden;
-    -webkit-text-size-adjust: 100%;
+    overflow-x: clip;
     -webkit-tap-highlight-color: transparent;
-    overscroll-behavior-y: contain;
   }
   body.theme-night {
     background: linear-gradient(160deg, #1c1a2c 0%, #0e0c1c 60%, #1a1530 100%);
@@ -2196,8 +2198,11 @@ function typeText(target, raw, onDone) {
       target.appendChild(document.createTextNode(t.text));
     }
     idx++;
-    // 自動滾動
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    // 自動滾動 — 只有讀者已經在接近底部時才追蹤打字位置
+    const nearBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 120);
+    if (nearBottom) {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
   }
   currentTyping = setInterval(step, 28);
 }
